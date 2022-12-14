@@ -221,7 +221,7 @@ export default defineComponent({
 
 <style scoped>
 .bg-image {
-  background-image: url(app/src/assets/bg1.jpg);
+  background-image: url(app/src/assets/bg2.jpg);
   background-repeat: no-repeat;
   background-size: cover;
 }
