@@ -114,7 +114,7 @@
 
                   <q-tab-panel name="transferLogs">
                     <div class="text-h4 q-mb-md">Transfer Logs</div>
-                    <p>test</p>
+                    <p>.</p>
                   </q-tab-panel>
 
                   <q-tab-panel name="accessHistory">
@@ -347,10 +347,10 @@
                                   class="text-grey-9 text-subtitle1 text-bold q-ml-md"
                                   >Result : {{ timeLeft }}
                                 </span>
-                                <span
+                                <!-- <span
                                   class="text-grey-9 text-subtitle1 text-bold q-ml-md"
                                   >Result : {{ errorMessage }}
-                                </span>
+                                </span> -->
                               </div>
                             </div>
                           </q-card-section>
@@ -466,7 +466,7 @@ export default defineComponent({
 
   data() {
     return {
-      currentTab: "accessHistory",
+      currentTab: "accounts",
       loading: false,
       loadingGrantTx: false,
       dialogGrantRole: false,
@@ -666,9 +666,6 @@ export default defineComponent({
         console.log(res);
       } catch (error) {
         console.log("ERROR", error);
-        if (error) {
-          this.errorMessage = "THE VAULT IS LOCKED.";
-        }
       }
     },
 

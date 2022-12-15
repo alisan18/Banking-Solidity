@@ -257,6 +257,14 @@ export default defineComponent({
           insetLevel: 0,
           to: "/client/transfer",
         },
+        {
+          label: "EXCHANGE",
+          icon: "attach_money",
+          size: "50px",
+          color: "primary",
+          insetLevel: 0,
+          to: "/client/exchange",
+        },
       ],
     };
   },

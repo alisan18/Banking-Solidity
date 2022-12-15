@@ -6,7 +6,7 @@
           <div class="row q-ml-sm">
             <div class="col-12 col-md-11 q-mb-sm">
               <span class="text-bold text-grey-8 text-h6">
-                CONTRACT FUNCTIONS
+                BANK CONTRACT FUNCTIONS
               </span>
             </div>
             <div class="col-12 col-md-12 q-mb-sm">
@@ -32,6 +32,27 @@
               <span class="text-bold text-green text-h6 q-ml-sm"
                 >{{ contractEthBalance }} Eth</span
               >
+            </div>
+            <div class="col-12 col-md-12 q-mt-sm">
+              <span class="text-bold text-grey-8 text-h6">
+                Withdraw Funds
+              </span>
+            </div>
+            <div class="col-12 col-md-3">
+              <q-input
+                label="amount"
+                outlined
+                dense
+                placeholder="0x00"
+                v-model="withdrawAmount"
+              >
+              </q-input>
+              <q-btn
+                label="Withdraw"
+                color="green-8"
+                class="text-subtitle1 q-mt-sm"
+                @click="withdrawFunds"
+              />
             </div>
           </div>
         </q-card-section>
@@ -68,6 +89,7 @@ export default defineComponent({
       usdBalance: "",
       ethBalance: "",
       contractEthBalance: "",
+      withdrawAmount: "",
     };
   },
 
@@ -131,6 +153,20 @@ export default defineComponent({
           .call({ from: this.currentAccount });
         const read = parseInt(res) / 10 ** 18;
         this.contractEthBalance = read.toFixed(2);
+        console.log(res);
+      } catch (error) {
+        console.log("ERROR", error);
+      }
+    },
+
+    async withdrawFunds() {
+      try {
+        const res = await bankContract.methods
+          .withdrawFunds(this.withdrawAmount)
+          .send({ from: this.currentAccount });
+        await this.getTotalEthBalance();
+        await this.getTotalUsdBalance();
+        await this.getTotalEthBalance();
         console.log(res);
       } catch (error) {
         console.log("ERROR", error);

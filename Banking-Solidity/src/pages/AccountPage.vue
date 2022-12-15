@@ -118,9 +118,7 @@
                 <q-tab-panel name="withdraws">
                   <div class="row q-ml-sm">
                     <div class="col-12 col-md-11 q-mb-sm">
-                      <span class="text-bold text-dark text-subtitle1">
-                        ALL WITHDRAWS TABLE
-                      </span>
+                      <span class="text-bold text-dark text-subtitle1"> </span>
                     </div>
                   </div>
 
@@ -142,7 +140,7 @@
                     >
                       <template #top>
                         <div class="col-2 q-table__title text-h6">
-                          WITHDRAWS
+                          WITHDRAWALS
                         </div>
                         <q-space />
                       </template>
@@ -195,9 +193,7 @@
                 <q-tab-panel name="transfer">
                   <div class="row q-ml-sm">
                     <div class="col-12 col-md-11 q-mb-sm">
-                      <span class="text-bold text-dark text-subtitle1">
-                        ALL WITHDRAWS TABLE
-                      </span>
+                      <span class="text-bold text-dark text-subtitle1"> </span>
                     </div>
                   </div>
 
@@ -219,7 +215,7 @@
                     >
                       <template #top>
                         <div class="col-2 q-table__title text-h6">
-                          WITHDRAWS
+                          TRANSFERS
                         </div>
                         <q-space />
                       </template>

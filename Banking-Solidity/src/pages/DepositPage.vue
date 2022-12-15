@@ -40,34 +40,27 @@
 
           <div class="q-ma-xl text-center">
             <q-slide-transition appear>
-              <q-card v-if="showEthereum" class="flex flex-center">
-                <q-card-section>
-                  <div class="row q-ml-md q-mt-sm">
-                    <div class="col-12 col-md-12 q-mt-sm">
-                      <span class="text-grey-9 text-subtitle1 text-bold"
-                        >Deposit Amount :
-                      </span>
-                    </div>
-                    <div class="col-12 col-md-12">
-                      <q-input
-                        label="amount"
-                        outlined
-                        dense
-                        placeholder="0x00"
-                        v-model="depositAmount"
-                      >
-                      </q-input>
-                    </div>
-                    <div class="col-12 col-md-12 q-mt-sm">
-                      <q-btn
-                        color="green-8"
-                        label="Deposit"
-                        @click="userDeposit"
-                      />
-                    </div>
-                  </div>
-                </q-card-section>
-              </q-card>
+              <div v-if="showEthereum" class="row q-ml-md q-mt-sm">
+                <div class="col-12 col-md-12 q-mt-sm">
+                  <span class="text-grey-9 text-subtitle1 text-bold"
+                    >Deposit Amount :
+                  </span>
+                </div>
+                <div class="col-12 col-md-4"></div>
+                <div class="col-12 col-md-4">
+                  <q-input
+                    label="amount"
+                    outlined
+                    dense
+                    placeholder="0x00"
+                    v-model="depositAmount"
+                  >
+                  </q-input>
+                </div>
+                <div class="col-12 col-md-12 q-mt-sm">
+                  <q-btn color="green-8" label="Deposit" @click="userDeposit" />
+                </div>
+              </div>
             </q-slide-transition>
           </div>
         </q-card-section>
@@ -170,7 +163,8 @@ export default defineComponent({
         const res = await bankContract.methods
           .deposit()
           .send({ value: this.depositAmount, from: this.currentAccount });
-        this.etUserEthBalance();
+        await this.etUserEthBalance();
+        await this.getUserUsdBalance();
         console.log(res);
       } catch (error) {
         console.log(error);

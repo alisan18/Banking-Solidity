@@ -34,6 +34,10 @@ const routes = [
         path: "/client/transfer",
         component: () => import("pages/TransferPage.vue"),
       },
+      {
+        path: "/client/exchange",
+        component: () => import("pages/ExchangePage.vue"),
+      },
     ],
   },
   // Always leave this as last one,

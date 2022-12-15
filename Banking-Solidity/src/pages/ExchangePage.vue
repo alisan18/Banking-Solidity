@@ -21,18 +21,18 @@
           </div>
           <div class="flex flex-center">
             <q-btn
-              label="ETHEREUM"
+              label="ETH / USD"
               class="text-subtitle1"
               color="primary"
               @click="showEthereum = !showEthereum"
             />
             <q-btn
-              label="BITCOIN"
+              label="BITCOIN / USD"
               class="q-ml-lg text-subtitle1"
               color="warning"
             />
             <q-btn
-              label="TETHER"
+              label="TETHER / USD"
               class="q-ml-lg text-subtitle1"
               color="secondary"
             />
@@ -43,44 +43,129 @@
               <div v-if="showEthereum" class="row q-ml-md q-mt-sm">
                 <div class="col-12 col-md-12 q-mt-sm q-mb-sm">
                   <span class="text-grey-9 text-subtitle1 text-bold"
-                    >Transfer to another bank user :
+                    >Exchange ETH to USD
                   </span>
                 </div>
                 <div class="col-12 col-md-3">
                   <span></span>
                 </div>
-                <div class="col-12 col-md-3 q-ml-lg">
-                  <q-input
-                    label="Address"
-                    outlined
-                    dense
-                    placeholder="0x00000000000"
-                    v-model="recieverAddress"
-                  >
-                  </q-input>
-                </div>
-                <div class="col-12 col-md-2 q-ml-sm">
+                <div class="col-12 col-md-2"></div>
+                <div class="col-12 col-md-2">
                   <q-input
                     label="amount"
                     outlined
                     dense
                     placeholder="amount"
-                    v-model="transferAmount"
+                    v-model="convertAmount"
                   >
                   </q-input>
                 </div>
                 <div class="col-12 col-md-12 q-mt-md">
                   <q-btn
                     color="green-8"
-                    label="Transfer"
-                    @click="userTransfer"
+                    label="Exchange"
+                    @click="exchangeCurrency"
                   />
+                </div>
+                <div class="col-12 col-md-12 q-mt-md">
+                  <span class="text-subtitle1 text-bold">NOTE:</span>
+                  <span class="text-subtitle1 text-grey-8">
+                    Minimun amount to convert is 1 Eth. <br />You may check
+                    exchange rate
+                    <q-btn
+                      flat
+                      dense
+                      label="HERE"
+                      color="green"
+                      class="text-bold"
+                      @click="dialogPrice = true"
+                    />.
+                  </span>
                 </div>
               </div>
             </q-slide-transition>
           </div>
         </q-card-section>
       </q-card>
+
+      <q-dialog
+        v-model="dialogPrice"
+        persistent
+        transition-show="flip-down"
+        transition-hide="flip-up"
+      >
+        <q-card class="text-white text-bold" style="width: 500px">
+          <q-toolbar class="bg-yellow-10">
+            <q-icon name="request_quote" size="45px" />
+            <div>
+              <span class="text-h5 text-bold"> ETH/USD </span>
+            </div>
+
+            <q-space />
+
+            <q-btn dense flat icon="close" v-close-popup>
+              <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+            </q-btn>
+          </q-toolbar>
+
+          <q-card-section>
+            <div>
+              <span class="text-dark text-h6 q-ml-sm">Get Price</span>
+            </div>
+            <div class="row q-ml-sm q-mb-sm q-mt-sm">
+              <div class="col-12 col-md-3">
+                <q-btn
+                  color="yellow-10"
+                  glossy
+                  label="Check"
+                  @click="getPrice"
+                />
+              </div>
+              <div v-if="price">
+                <span class="text-h6 text-bold text-dark"> Price : </span>
+                <span class="text-h5 text-bold text-green q-ml-sm">
+                  $ {{ price }}</span
+                >
+              </div>
+            </div>
+          </q-card-section>
+
+          <q-separator />
+
+          <q-card-section>
+            <div>
+              <span class="text-dark text-h6 q-ml-sm">Conversion Rate</span>
+            </div>
+            <div class="row q-ml-sm q-mb-sm q-mt-sm">
+              <div class="col-12 col-md-2">
+                <q-btn
+                  color="yellow-10"
+                  glossy
+                  label="Check"
+                  @click="getConversionRate"
+                />
+              </div>
+              <div class="col-12 col-md-5 q-ml-sm">
+                <q-input
+                  v-model="inputConversionRate"
+                  label="Input eth amount"
+                  outlined
+                  dense
+                  placeholder="amount"
+                />
+              </div>
+              <div v-if="conversionRate" class="q-ml-md">
+                <span class="text-subtitle1 text-bold text-dark q-mt-sm">
+                  Rate :
+                </span>
+                <span class="text-h5 text-bold text-green q-ml-sm q-mt-sm">
+                  $ {{ conversionRate }}</span
+                >
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </q-dialog>
 
       <q-page-container>
         <router-view />
@@ -108,15 +193,17 @@ export default defineComponent({
 
   data() {
     return {
-      url: require("app/src/assets/acnlogo.png"),
       currentAccount: "",
       isConnected: false,
       currentTab: "",
       userEthBalance: "",
       userUsdBalance: "",
       showEthereum: false,
-      recieverAddress: "",
-      transferAmount: "",
+      convertAmount: "",
+      dialogPrice: false,
+      price: "",
+      inputConversionRate: "",
+      conversionRate: "",
     };
   },
 
@@ -175,17 +262,35 @@ export default defineComponent({
       }
     },
 
-    async userTransfer() {
+    async exchangeCurrency() {
       try {
         const res = await bankContract.methods
-          .transferEth(this.recieverAddress, this.transferAmount)
+          .exchangeCurrency(this.convertAmount)
           .send({ from: this.currentAccount });
-        await this.getUserEthBalance();
-        await this.getUserUsdBalance();
         console.log(res);
+        await this.getUserUsdBalance();
+        await this.getUserEthBalance();
       } catch (error) {
-        console.log(error);
+        console.log("ERROR", error);
       }
+    },
+
+    async getPrice() {
+      try {
+        const res = await bankContract.methods.getPrice().call();
+        const read = parseInt(res) / 10 ** 18;
+        this.price = read.toFixed(2);
+        console.log(this.price);
+      } catch (error) {
+        console.log("ERROR", errorr);
+      }
+    },
+
+    async getConversionRate() {
+      const rate = this.inputConversionRate * this.price;
+      this.conversionRate = rate.toFixed(2);
+      await this.getUserUsdBalance();
+      await this.getUserEthBalance();
     },
   },
 });

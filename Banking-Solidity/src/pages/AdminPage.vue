@@ -243,15 +243,15 @@ export default defineComponent({
         },
         {
           label: "VAULT",
-          icon: "account_balance",
+          icon: "phonelink_lock",
           size: "50px",
           color: "primary",
           insetLevel: 0,
           to: "/vault",
         },
         {
-          label: "OTHERS",
-          icon: "pageview",
+          label: "BANK",
+          icon: "account_balance",
           size: "50px",
           color: "primary",
           insetLevel: 0,
