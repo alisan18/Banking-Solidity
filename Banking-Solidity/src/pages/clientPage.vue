@@ -51,11 +51,11 @@
         </q-toolbar>
       </q-header>
 
-      <q-page padding>
+      <!-- <q-page padding>
         <div class="flex flex-center">
-          <span class="text-dark text-h1 text-bold text-grey-9">WELCOME!</span>
+          <span class="text-dark text-h1 text-bold text-dark">WELCOME!</span>
         </div>
-      </q-page>
+      </q-page> -->
 
       <q-drawer
         v-model="drawerMenu"
@@ -114,7 +114,7 @@
             WELCOME
           </div>
           <div class="text-h2 flex flex-center q-mt-md text-grey-9 text-bold">
-            ADMINISTRATOR!
+            ANDRES BONIFACIO!
           </div>
           <div class="flex flex-center q-mt-md">
             <span class="text-subtitle1 text-bold text-grey-9">Address:</span>
@@ -169,8 +169,8 @@
         </div>
 
         <!-- <div class="flex flex-center q-mt-sm">
-          <q-img :src="url" alt="" style="height: 60px; width: 60px" />
-        </div> -->
+            <q-img :src="url" alt="" style="height: 60px; width: 60px" />
+          </div> -->
 
         <router-view />
       </q-page-container>

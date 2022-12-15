@@ -1,13 +1,14 @@
 <template>
   <div>
     <q-layout view="lHh Lpr lFf">
-      <div class="q-mt-xl q-ml-lg">
+      <div class="q-mt-lg q-ml-lg">
         <q-tabs
           v-model="currentTab"
           inline-label
           narrow-indicator
           active-bg-color="warning"
-          active-color="primary"
+          active-color="dark"
+          indicator-color="primary"
         >
           <q-tab label="USERS" name="usersList" icon="person"></q-tab>
           <q-tab label="DEPOSITS" name="depositList" icon="add_card"></q-tab>
@@ -23,30 +24,24 @@
           transition-next="jump-up"
         >
           <q-tab-panel name="usersList">
-            <q-card style="height: 500px">
+            <q-card>
               <q-card-section>
                 <div class="row q-ml-sm">
                   <div class="col-12 col-md-11 q-mb-sm">
-                    <span class="text-bold text-grey-8 text-subtitle1">
+                    <span class="text-bold text-dark text-subtitle1">
                       ENROLLED USERS TABLE
                     </span>
                   </div>
                 </div>
 
-                <div class="q-mt-xl flex flex-center">
+                <div class="q-mt-md q-mb-xl flex flex-center">
                   <q-table
                     :rows="userRows"
                     :columns="userColumns"
                     separator="cell"
                     title="Transactions"
                     row-key="to"
-                    :visible-columns="[
-                      'index',
-                      'address',
-                      'enrolledTime',
-                      'status',
-                      'action',
-                    ]"
+                    :visible-columns="['address', 'enrolledTime', 'action']"
                     :loading="loading"
                     :pagination="{
                       sortBy: 'enrolledTime',
@@ -102,7 +97,7 @@
                             color="red-4"
                             class="text-white"
                             no-caps
-                            @click="revokeConfirmation(props.row)"
+                            @click="removeUser(props.row)"
                           >
                             Remove
                           </q-btn>
@@ -112,20 +107,30 @@
                   </q-table>
                 </div>
               </q-card-section>
+              <div class="row q-ml-lg">
+                <div class="col-12 col-md-11 q-mb-sm">
+                  <span class="text-bold text-grey-8 text-subtitle1">
+                    Note:
+                  </span>
+                  <span class="text-subtitle2 text-grey-6"
+                    >Please login first to blockchain to transact.</span
+                  >
+                </div>
+              </div>
             </q-card>
           </q-tab-panel>
           <q-tab-panel name="depositList">
-            <q-card style="height: 500px">
+            <q-card>
               <q-card-section>
                 <div class="row q-ml-sm">
                   <div class="col-12 col-md-11 q-mb-sm">
-                    <span class="text-bold text-grey-8 text-subtitle1">
+                    <span class="text-bold text-dark text-subtitle1">
                       ALL DEPOSITS TABLE
                     </span>
                   </div>
                 </div>
 
-                <div class="q-mt-xl flex flex-center">
+                <div class="q-mt-md q-mb-xl flex flex-center">
                   <q-table
                     :rows="depositsRows"
                     :columns="depositsColumns"
@@ -182,17 +187,17 @@
             </q-card>
           </q-tab-panel>
           <q-tab-panel name="withdrawList">
-            <q-card style="height: 500px">
+            <q-card>
               <q-card-section>
                 <div class="row q-ml-sm">
                   <div class="col-12 col-md-11 q-mb-sm">
-                    <span class="text-bold text-grey-8 text-subtitle1">
+                    <span class="text-bold text-dark text-subtitle1">
                       ALL WITHDRAWS TABLE
                     </span>
                   </div>
                 </div>
 
-                <div class="q-mt-xl flex flex-center">
+                <div class="q-mt-md q-mb-xl flex flex-center">
                   <q-table
                     :rows="withdrawsRows"
                     :columns="withdrawsColumns"
@@ -326,7 +331,7 @@ const bankContractAbi = bankABI.abi;
 
 const bankContract = new web3.eth.Contract(
   bankContractAbi,
-  process.env.CONTRACT_ADDRESS
+  process.env.CONTRACT_ADDRESS_BANK
 );
 
 export default defineComponent({
@@ -338,6 +343,8 @@ export default defineComponent({
       loading: false,
       dialogEnroll: false,
       loadingEnrollTx: false,
+      isConnected: false,
+      currentAccount: "",
       userAddress: "",
       userRows: [],
       userColumns: [
@@ -482,18 +489,60 @@ export default defineComponent({
   },
 
   async created() {
+    await this.checkConnection();
     await this.getAllUsers();
     await this.getAllDeposits();
     await this.getAllWithdraws();
   },
 
   methods: {
-    async enrollUser() {},
+    async checkConnection() {
+      this.loading = true;
+      const res = await ethereum.isConnected();
+      this.isConnected = res;
+      console.log(this.isConnected);
+
+      if (res == true) {
+        const res = await ethereum.request({ method: "eth_requestAccounts" });
+        const account = res[0];
+        this.currentAccount = account;
+        console.log(this.currentAccount);
+        let balance = await ethereum.request({
+          method: "eth_getBalance",
+          params: [account, "latest"],
+        });
+        const read = parseInt(balance) / 10 ** 18;
+        this.ethBalance = read.toFixed(4);
+        this.loading = false;
+      } else {
+        console.log("Connect Wallet to continue");
+      }
+    },
+
+    async enrollUser() {
+      try {
+        const res = await bankContract.methods
+          .enrollUser(this.userAddress)
+          .send({ from: this.currentAccount });
+        this.getAllUsers();
+      } catch (error) {
+        console.log("ERROR", error);
+      }
+    },
+
+    async removeUser(data) {
+      console.log(data);
+      try {
+      } catch (error) {
+        console.log("ERROR", error);
+      }
+    },
 
     async getAllUsers() {
       try {
         const res = await bankContract.methods.getAllUsers().call();
         this.userRows = res;
+        console.log(res);
       } catch (error) {
         console.log("ERROR", error);
       }
@@ -503,6 +552,7 @@ export default defineComponent({
       try {
         const res = await bankContract.methods.getAllDeposits().call();
         this.depositsRows = res;
+        console.log(res);
       } catch (error) {
         console.log("ERROR", error);
       }

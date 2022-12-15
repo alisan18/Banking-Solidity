@@ -129,6 +129,7 @@
                 <div class="text-center">
                   <div class="col-12 col-md-4 q-mb-md">
                     <q-btn
+                      style="width: 230px"
                       :loading="loading"
                       @click="connectMetamask"
                       color="orange-7"
@@ -159,8 +160,17 @@
 
 <script>
 import { defineComponent } from "vue";
+import Web3 from "web3";
+import bankABI from "./bankABI.json";
 
 const provider = window.ethereum;
+const web3 = new Web3(provider);
+const bankContractAbi = bankABI.abi;
+
+const bankContract = new web3.eth.Contract(
+  bankContractAbi,
+  process.env.CONTRACT_ADDRESS_BANK
+);
 
 export default defineComponent({
   name: "IndexPage",
@@ -189,32 +199,31 @@ export default defineComponent({
         const account = res[0];
         this.currentAccount = account;
         console.log(this.currentAccount);
-        // await this.checkisOwner();
+        await this.checkisOwner();
         this.loading = false;
-        this.$router.push({ path: "/home" });
       } else {
         console.log("Please Install Metamask!");
         this.loading = false;
       }
 
-      // if (this.isAdmin != true) {
-      //   this.$router.push({ path: "/user" });
-      // } else {
-      //   this.$router.push({ path: "/admin" });
-      // }
+      if (this.isAdmin != true) {
+        this.$router.push({ path: "/client" });
+      } else {
+        this.$router.push({ path: "/admin" });
+      }
     },
 
-    // async checkisOwner() {
-    //   try {
-    //     const res = await icoContract.methods
-    //       .isOwner(this.currentAccount)
-    //       .call();
-    //     console.log(res);
-    //     this.isAdmin = res;
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
+    async checkisOwner() {
+      try {
+        const res = await bankContract.methods
+          .isOwner(this.currentAccount)
+          .call();
+        console.log(res);
+        this.isAdmin = res;
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 });
 </script>

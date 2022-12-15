@@ -30,7 +30,7 @@
                 Total Contract Balance :
               </span>
               <span class="text-bold text-green text-h6 q-ml-sm"
-                >{{ ethBalance }} Eth</span
+                >{{ contractEthBalance }} Eth</span
               >
             </div>
           </div>
@@ -55,7 +55,7 @@ const bankContractAbi = bankABI.abi;
 
 const bankContract = new web3.eth.Contract(
   bankContractAbi,
-  process.env.CONTRACT_ADDRESS
+  process.env.CONTRACT_ADDRESS_BANK
 );
 
 export default defineComponent({
@@ -67,16 +67,41 @@ export default defineComponent({
       conversionRate: "",
       usdBalance: "",
       ethBalance: "",
+      contractEthBalance: "",
     };
   },
 
   async created() {
+    await this.checkConnection();
     await this.getPrice();
     await this.getTotalUsdBalance();
     await this.getTotalEthBalance();
   },
 
   methods: {
+    async checkConnection() {
+      this.loading = true;
+      const res = await ethereum.isConnected();
+      this.isConnected = res;
+      console.log(this.isConnected);
+
+      if (res == true) {
+        const res = await ethereum.request({ method: "eth_requestAccounts" });
+        const account = res[0];
+        this.currentAccount = account;
+        console.log(this.currentAccount);
+        let balance = await ethereum.request({
+          method: "eth_getBalance",
+          params: [account, "latest"],
+        });
+        const read = parseInt(balance) / 10 ** 18;
+        this.ethBalance = read.toFixed(4);
+        this.loading = false;
+      } else {
+        console.log("Connect Wallet to continue");
+      }
+    },
+
     async getPrice() {
       try {
         const res = await bankContract.methods.getPrice().call();
@@ -101,8 +126,11 @@ export default defineComponent({
 
     async getTotalEthBalance() {
       try {
-        const res = await bankContract.methods.getAdminBalance().call();
-        this.ethBalance = res;
+        const res = await bankContract.methods
+          .getAdminBalance(process.env.CONTRACT_ADDRESS_BANK)
+          .call({ from: this.currentAccount });
+        const read = parseInt(res) / 10 ** 18;
+        this.contractEthBalance = read.toFixed(2);
         console.log(res);
       } catch (error) {
         console.log("ERROR", error);

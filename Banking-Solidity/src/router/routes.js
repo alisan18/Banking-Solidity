@@ -5,7 +5,7 @@ const routes = [
   },
 
   {
-    path: "/home",
+    path: "/admin",
     component: () => import("pages/AdminPage.vue"),
     children: [
       { path: "/users", component: () => import("pages/UserPage.vue") },
@@ -14,10 +14,16 @@ const routes = [
       { path: "/others", component: () => import("pages/OthersPage.vue") },
     ],
   },
-  // {
-  //   path: "/user",
-  //   component: () => import("pages/UserPage.vue"),
-  // },
+  {
+    path: "/client",
+    component: () => import("pages/clientPage.vue"),
+    // children: [
+    //   { path: "/users", component: () => import("pages/UserPage.vue") },
+    //   { path: "/multi-sig", component: () => import("pages/MultiSigPage.vue") },
+    //   { path: "/vault", component: () => import("pages/VaultPage.vue") },
+    //   { path: "/others", component: () => import("pages/OthersPage.vue") },
+    // ],
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
