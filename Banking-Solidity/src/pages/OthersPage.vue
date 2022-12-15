@@ -127,7 +127,7 @@ export default defineComponent({
     async getTotalEthBalance() {
       try {
         const res = await bankContract.methods
-          .getAdminBalance(process.env.CONTRACT_ADDRESS_BANK)
+          .getAdminBalance()
           .call({ from: this.currentAccount });
         const read = parseInt(res) / 10 ** 18;
         this.contractEthBalance = read.toFixed(2);

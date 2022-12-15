@@ -242,7 +242,7 @@
                         <q-td key="date" :props="props" style="font-size: 16px">
                           {{
                             new Date(
-                              props.row.timeWithdraw * 1000
+                              props.row.timeWithdraws * 1000
                             ).toLocaleString()
                           }}
                         </q-td>
@@ -562,6 +562,7 @@ export default defineComponent({
       try {
         const res = await bankContract.methods.getAllWithdraws().call();
         this.withdrawsRows = res;
+        console.log(this.withdrawsRows);
       } catch (error) {
         console.log("ERROR", error);
       }

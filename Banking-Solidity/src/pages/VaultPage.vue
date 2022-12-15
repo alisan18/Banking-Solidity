@@ -179,9 +179,9 @@
                   <q-tab-panel name="settings">
                     <div class="q-mt-sm q-mb-sm">
                       <span class="text-subtitle1">VAULT BALANCE : </span>
-                      <span class="text-subtitle1 text-blue-6">{{
-                        vaultBalance
-                      }}</span>
+                      <span class="text-subtitle1 text-green text-bold"
+                        >{{ vaultBalance }} ETH</span
+                      >
                     </div>
                     <div class="q-pa-md" style="max-width: 950px">
                       <q-expansion-item
@@ -687,7 +687,8 @@ export default defineComponent({
         const res = await vaultContract.methods
           .getVaultBalance()
           .call({ from: this.currentAccount });
-        this.vaultBalance = res;
+        const read = parseInt(res) / 10 ** 18;
+        this.vaultBalance = read.toFixed(2);
         console.log(res);
       } catch (error) {
         console.log("ERROR", error);

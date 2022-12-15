@@ -53,7 +53,7 @@
 
       <!-- <q-page padding>
         <div class="flex flex-center">
-          <span class="text-dark text-h1 text-bold text-dark">WELCOME!</span>
+          <span class="text-dark text-h1 text-bold text-grey-9">WELCOME!</span>
         </div>
       </q-page> -->
 
@@ -169,8 +169,8 @@
         </div>
 
         <!-- <div class="flex flex-center q-mt-sm">
-            <q-img :src="url" alt="" style="height: 60px; width: 60px" />
-          </div> -->
+          <q-img :src="url" alt="" style="height: 60px; width: 60px" />
+        </div> -->
 
         <router-view />
       </q-page-container>
@@ -222,40 +222,40 @@ export default defineComponent({
           size: "50px",
           color: "primary",
           insetLevel: 0,
-          to: "/home",
+          to: "/client",
           active: false,
         },
         {
-          label: "USERS",
-          icon: "group",
+          label: "ACCOUNT",
+          icon: "account_circle",
           size: "50px",
           color: "primary",
           insetLevel: 0,
-          to: "/users",
+          to: "/client/account",
         },
         {
-          label: "MULTI-SIG",
-          icon: "switch_account",
+          label: "DEPOSIT",
+          icon: "payments",
           size: "50px",
           color: "primary",
           insetLevel: 0,
-          to: "/multi-sig",
+          to: "/client/deposit",
         },
         {
-          label: "VAULT",
-          icon: "account_balance",
+          label: "WITHDRAW",
+          icon: "output",
           size: "50px",
           color: "primary",
           insetLevel: 0,
-          to: "/vault",
+          to: "/client/withdraw",
         },
         {
-          label: "OTHERS",
-          icon: "pageview",
+          label: "TRANSFER",
+          icon: "move_down",
           size: "50px",
           color: "primary",
           insetLevel: 0,
-          to: "/others",
+          to: "/client/transfer",
         },
       ],
     };

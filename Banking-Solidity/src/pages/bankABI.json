@@ -307,13 +307,7 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_contractAddress",
-          "type": "address"
-        }
-      ],
+      "inputs": [],
       "name": "getAdminBalance",
       "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
       "stateMutability": "view",
@@ -409,7 +403,7 @@
             { "internalType": "uint256", "name": "amount", "type": "uint256" },
             {
               "internalType": "uint256",
-              "name": "timeTransfer",
+              "name": "timeTransfers",
               "type": "uint256"
             }
           ],
@@ -460,7 +454,7 @@
             { "internalType": "uint256", "name": "amount", "type": "uint256" },
             {
               "internalType": "uint256",
-              "name": "timeWithdraw",
+              "name": "timeWithdraws",
               "type": "uint256"
             }
           ],
@@ -526,76 +520,6 @@
       "inputs": [],
       "name": "getUserBalance",
       "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "address", "name": "_from", "type": "address" }
-      ],
-      "name": "getUserDeposits",
-      "outputs": [
-        {
-          "components": [
-            { "internalType": "uint256", "name": "amount", "type": "uint256" },
-            {
-              "internalType": "uint256",
-              "name": "timeDeposit",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct BankingSystem.UserDeposits[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "address", "name": "_from", "type": "address" }
-      ],
-      "name": "getUserTransfers",
-      "outputs": [
-        {
-          "components": [
-            { "internalType": "address", "name": "to", "type": "address" },
-            { "internalType": "uint256", "name": "amount", "type": "uint256" },
-            {
-              "internalType": "uint256",
-              "name": "timeTransfer",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct BankingSystem.UserTransfers[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "address", "name": "_from", "type": "address" }
-      ],
-      "name": "getUserWithdraws",
-      "outputs": [
-        {
-          "components": [
-            { "internalType": "uint256", "name": "amount", "type": "uint256" },
-            {
-              "internalType": "uint256",
-              "name": "timeWithdraw",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct BankingSystem.UserWithdraws[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
       "stateMutability": "view",
       "type": "function"
     },
@@ -715,7 +639,11 @@
       "outputs": [
         { "internalType": "address", "name": "to", "type": "address" },
         { "internalType": "uint256", "name": "amount", "type": "uint256" },
-        { "internalType": "uint256", "name": "timeTransfer", "type": "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "timeTransfers",
+          "type": "uint256"
+        }
       ],
       "stateMutability": "view",
       "type": "function"
@@ -728,19 +656,6 @@
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "address", "name": "", "type": "address" },
-        { "internalType": "uint256", "name": "", "type": "uint256" }
-      ],
-      "name": "userDeposits",
-      "outputs": [
-        { "internalType": "uint256", "name": "amount", "type": "uint256" },
-        { "internalType": "uint256", "name": "timeDeposit", "type": "uint256" }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
       "name": "userEthBalance",
       "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
@@ -748,36 +663,9 @@
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "address", "name": "", "type": "address" },
-        { "internalType": "uint256", "name": "", "type": "uint256" }
-      ],
-      "name": "userTransfers",
-      "outputs": [
-        { "internalType": "address", "name": "to", "type": "address" },
-        { "internalType": "uint256", "name": "amount", "type": "uint256" },
-        { "internalType": "uint256", "name": "timeTransfer", "type": "uint256" }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
       "name": "userUsdBalance",
       "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "address", "name": "", "type": "address" },
-        { "internalType": "uint256", "name": "", "type": "uint256" }
-      ],
-      "name": "userWithdraws",
-      "outputs": [
-        { "internalType": "uint256", "name": "amount", "type": "uint256" },
-        { "internalType": "uint256", "name": "timeWithdraw", "type": "uint256" }
-      ],
       "stateMutability": "view",
       "type": "function"
     },
@@ -814,7 +702,11 @@
       "outputs": [
         { "internalType": "address", "name": "_address", "type": "address" },
         { "internalType": "uint256", "name": "amount", "type": "uint256" },
-        { "internalType": "uint256", "name": "timeWithdraw", "type": "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "timeWithdraws",
+          "type": "uint256"
+        }
       ],
       "stateMutability": "view",
       "type": "function"

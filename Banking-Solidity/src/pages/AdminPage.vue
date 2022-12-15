@@ -222,7 +222,7 @@ export default defineComponent({
           size: "50px",
           color: "primary",
           insetLevel: 0,
-          to: "/home",
+          to: "/admin",
           active: false,
         },
         {
