@@ -114,6 +114,7 @@
                 Account Verified
                 <q-space />
                 <q-btn
+                  dense
                   flat
                   label="x"
                   class="text-white q-ml-md"
@@ -151,8 +152,49 @@
             </q-card>
           </q-dialog>
         </div>
-      </q-page>
 
+        <div>
+          <q-dialog v-model="dialog2" persistent>
+            <q-card style="width: 500px">
+              <q-bar
+                class="bg-warning text-h6 text-white flex flex-center"
+                style="height: 40px"
+              >
+                Note
+                <q-space />
+                <q-btn
+                  dense
+                  flat
+                  label="x"
+                  class="text-white q-ml-md"
+                  v-close-popup
+                />
+              </q-bar>
+              <q-card-section>
+                <div class="text-subtitle1 text-center text-grey-8 text-bold">
+                  Please install metamask!
+                </div>
+              </q-card-section>
+              <q-card-actions align="center" class="bg-white text-teal">
+                <div class="text-center">
+                  <div class="col-12 col-md-4 q-mb-md">
+                    <q-btn
+                      href="https://metamask.io/download/"
+                      target="_blank"
+                      style="width: 230px"
+                      :loading="loading"
+                      @click="connectMetamask"
+                      color="orange-7"
+                      class="text-bold"
+                      >Download Metamask Here
+                    </q-btn>
+                  </div>
+                </div>
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+        </div>
+      </q-page>
       <router-view />
     </q-page-container>
   </q-layout>
@@ -185,6 +227,7 @@ export default defineComponent({
       },
       loading: false,
       dialog1: false,
+      dialog2: false,
       isAdmin: false,
     };
   },
@@ -201,16 +244,23 @@ export default defineComponent({
         console.log(this.currentAccount);
         await this.checkisOwner();
         this.loading = false;
+
+        if (this.isAdmin != true) {
+          this.$router.push({ path: "/client" });
+        } else {
+          this.$router.push({ path: "/admin" });
+        }
       } else {
         console.log("Please Install Metamask!");
         this.loading = false;
+        this.dialog2 = true;
       }
 
-      if (this.isAdmin != true) {
-        this.$router.push({ path: "/client" });
-      } else {
-        this.$router.push({ path: "/admin" });
-      }
+      // if (this.isAdmin != true) {
+      //   this.$router.push({ path: "/client" });
+      // } else {
+      //   this.$router.push({ path: "/admin" });
+      // }
     },
 
     async checkisOwner() {

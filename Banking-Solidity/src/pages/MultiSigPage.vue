@@ -197,6 +197,7 @@
 <script>
 import { defineComponent, ref } from "vue";
 import Web3 from "web3";
+import { QSpinnerFacebook, QSpinnerBox } from "quasar";
 import bankABI from "./bankABI.json";
 
 const provider = window.ethereum;
@@ -322,6 +323,29 @@ export default defineComponent({
   },
 
   methods: {
+    showLoading() {
+      this.$q.loading.show({
+        spinner: QSpinnerBox,
+        spinnerColor: "warning",
+        spinnerSize: 180,
+        backgroundColor: "blue-grey-10",
+        message: "Transaction in progress.Waiting for confirmations...",
+        messageColor: "white",
+      });
+    },
+
+    showTransactionConfirmed() {
+      this.$q.notify({
+        type: "positive",
+        message: "Transaction Confirmed.",
+        position: "top-right",
+        iconSize: "35px",
+        progress: true,
+        timeout: 5000,
+        html: true,
+      });
+    },
+
     async checkConnection() {
       this.loading = true;
       const res = await ethereum.isConnected();
@@ -357,6 +381,7 @@ export default defineComponent({
 
     async submitTransaction() {
       try {
+        this.loadingSubmitTx = true;
         const res = await bankContract.methods
           .submitTransaction(
             this.submitTransactionTo,
@@ -364,41 +389,54 @@ export default defineComponent({
           )
           .send({ from: this.currentAccount });
         this.getAllTransactions();
+        this.loadingSubmitTx = false;
+        this.dialogSubmit = false;
         console.log(res);
       } catch (error) {
         console.log("ERROR", error);
+        this.loadingSubmitTx = false;
       }
     },
 
     async confirmTransaction(data) {
       try {
+        this.showLoading();
         const res = await bankContract.methods
           .confirmTransaction(data.index)
           .send({ from: this.currentAccount });
         this.getAllTransactions();
+        this.$q.loading.hide();
       } catch (error) {
         console.log("ERROR", error);
+        this.$q.loading.hide();
       }
     },
 
     async revokeConfirmation(data) {
       try {
+        this.showLoading();
         const res = await bankContract.methods
           .revokeConfirmation(data.index)
           .send({ from: this.currentAccount });
         this.getAllTransactions();
+        this.$q.loading.hide();
       } catch (error) {
         console.log("ERROR", error);
+        this.$q.loading.hide();
       }
     },
 
     async executeTransaction(data) {
       try {
+        console.log(data.index);
+        this.showLoading();
         const res = await bankContract.methods
           .executeTransaction(data.index)
           .send({ from: this.currentAccount });
+        this.$q.loading.hide();
       } catch (error) {
         console.log("ERROR", error);
+        this.$q.loading.hide();
       }
     },
   },

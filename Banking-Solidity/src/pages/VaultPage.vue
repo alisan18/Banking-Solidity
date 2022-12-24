@@ -166,9 +166,11 @@
                               style="font-size: 16px"
                             >
                               {{
-                                new Date(
-                                  props.row.timeOut * 1000
-                                ).toLocaleString()
+                                props.row.timeOut == 0
+                                  ? "NA"
+                                  : new Date(
+                                      props.row.timeOut * 1000
+                                    ).toLocaleString()
                               }}
                             </q-td>
                           </q-tr>

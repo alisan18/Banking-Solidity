@@ -16,8 +16,8 @@
             <div class="row">
               <div class="col-md-5">
                 <span class="text-warning text-h5 text-bold"> The NEXUS </span>
-                <q-img :src="url" style="height: 45px; max-width: 55px" />
-                <span class="text-subtitle1 text-bold text-dark">
+                <!-- <q-img :src="url" style="height: 45px; max-width: 55px" /> -->
+                <span class="text-subtitle2 text-grey-10">
                   Blockchain Technology
                 </span>
               </div>
@@ -139,6 +139,7 @@
             >Access Bank :</span
           >
           <q-btn
+            :loading="this.loading"
             @click="accessBank"
             class="q-ml-sm q-mr-sm text-bold text-grey-10"
             color="warning"
@@ -156,6 +157,7 @@
             >Access Vault :</span
           >
           <q-btn
+            :loading="this.vaultLoading"
             @click="accessVault"
             class="q-ml-sm q-mr-sm text-bold text-grey-10"
             color="warning"
@@ -180,6 +182,7 @@
 
 <script>
 import { defineComponent, ref } from "vue";
+import { QSpinnerFacebook } from "quasar";
 import Web3 from "web3";
 import bankABI from "./bankABI.json";
 import vaultABI from "./vaultABI.json";
@@ -206,6 +209,8 @@ export default defineComponent({
 
   data() {
     return {
+      loading: false,
+      vaultLoading: false,
       url: require("app/src/assets/acnlogo.png"),
       bg1: require("app/src/assets/bg1.jpg"),
       toggleLeftDrawer: false,
@@ -262,11 +267,49 @@ export default defineComponent({
   },
 
   async created() {
+    this.showLoading();
+    this.showLoginNotif();
     await this.checkConnection();
     await this.getLoginTime();
+    this.$q.loading.hide();
   },
 
   methods: {
+    showLoading() {
+      this.$q.loading.show({
+        spinner: QSpinnerFacebook,
+        spinnerColor: "warning",
+        spinnerSize: 170,
+        backgroundColor: "blue-grey-10",
+        message: "Fetching data from blockchain. Please wait...",
+        messageColor: "black",
+      });
+    },
+    // this.$q.loading.hide()
+
+    showLoginNotif() {
+      this.$q.notify({
+        type: "positive",
+        message: `Login Successful.`,
+        position: "top-right",
+        iconSize: "35px",
+        progress: true,
+        timeout: 4000,
+      });
+    },
+
+    showTransactionConfirmed() {
+      this.$q.notify({
+        type: "positive",
+        message: "Transaction Confirmed.",
+        position: "top-right",
+        iconSize: "35px",
+        progress: true,
+        timeout: 5000,
+        html: true,
+      });
+    },
+
     async connectMetamask() {
       if (provider) {
         this.loading = true;
@@ -321,12 +364,16 @@ export default defineComponent({
 
     async accessBank() {
       try {
+        this.loading = true;
         const res = await bankContract.methods
           .accessBankInAndOut()
           .send({ from: this.currentAccount });
         this.bankLoginTime = new Date().toLocaleString();
+        this.loading = false;
+        this.showTransactionConfirmed();
       } catch (error) {
         console.log("ERROR", error);
+        this.loading = false;
       }
     },
 
@@ -344,13 +391,17 @@ export default defineComponent({
 
     async accessVault() {
       try {
+        this.vaultLoading = true;
         const res = await vaultContract.methods
           .accessVault()
           .send({ from: this.currentAccount });
         this.vaultLoginTime = new Date().toLocaleString();
         console.log(this.vaultLoginTime);
+        this.vaultLoading = false;
+        this.showTransactionConfirmed();
       } catch (error) {
         console.log("ERROR", error);
+        this.vaultLoading = false;
       }
     },
 

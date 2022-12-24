@@ -321,6 +321,7 @@
 </template>
 
 <script>
+import { QSpinnerBox } from "quasar";
 import { defineComponent, ref } from "vue";
 import Web3 from "web3";
 import bankABI from "./bankABI.json";
@@ -496,6 +497,29 @@ export default defineComponent({
   },
 
   methods: {
+    showLoading() {
+      this.$q.loading.show({
+        spinner: QSpinnerBox,
+        spinnerColor: "warning",
+        spinnerSize: 180,
+        backgroundColor: "blue-grey-10",
+        message: "Transaction in progress.Waiting for confirmations...",
+        messageColor: "white",
+      });
+    },
+
+    showTransactionConfirmed() {
+      this.$q.notify({
+        type: "positive",
+        message: "Transaction Confirmed.",
+        position: "top-right",
+        iconSize: "35px",
+        progress: true,
+        timeout: 5000,
+        html: true,
+      });
+    },
+
     async checkConnection() {
       this.loading = true;
       const res = await ethereum.isConnected();
@@ -521,20 +545,33 @@ export default defineComponent({
 
     async enrollUser() {
       try {
+        this.loadingEnrollTx = true;
         const res = await bankContract.methods
           .enrollUser(this.userAddress)
           .send({ from: this.currentAccount });
+        this.loadingEnrollTx = false;
+        this.showTransactionConfirmed();
         this.getAllUsers();
+        this.dialogEnroll = false;
       } catch (error) {
         console.log("ERROR", error);
+        this.loadingEnrollTx = false;
       }
     },
 
     async removeUser(data) {
-      console.log(data);
       try {
+        this.showLoading();
+        const res = await bankContract.methods
+          .removeUser(data._address)
+          .send({ from: this.currentAccount });
+        console.log(res);
+        this.showTransactionConfirmed();
+        this.getAllUsers();
+        this.$q.loading.hide();
       } catch (error) {
         console.log("ERROR", error);
+        this.$q.loading.hide();
       }
     },
 

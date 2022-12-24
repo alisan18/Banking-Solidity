@@ -16,8 +16,8 @@
             <div class="row">
               <div class="col-md-5">
                 <span class="text-warning text-h5 text-bold"> The NEXUS </span>
-                <q-img :src="url" style="height: 45px; max-width: 55px" />
-                <span class="text-subtitle1 text-bold text-dark">
+                <!-- <q-img :src="url" style="height: 45px; max-width: 55px" /> -->
+                <span class="text-subtitle1 text-grey-10">
                   Blockchain Technology
                 </span>
               </div>
