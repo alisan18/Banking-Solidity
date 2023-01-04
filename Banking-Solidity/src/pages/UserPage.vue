@@ -41,7 +41,12 @@
                     separator="cell"
                     title="Transactions"
                     row-key="to"
-                    :visible-columns="['address', 'enrolledTime', 'action']"
+                    :visible-columns="[
+                      'address',
+                      'enrolledTime',
+                      'enrolledBy',
+                      'action',
+                    ]"
                     :loading="loading"
                     :pagination="{
                       sortBy: 'enrolledTime',
@@ -88,6 +93,13 @@
                               props.row.enrolledTime * 1000
                             ).toLocaleString()
                           }}
+                        </q-td>
+                        <q-td
+                          key="address"
+                          :props="props"
+                          style="font-size: 16px"
+                        >
+                          {{ props.row.enrolledBy }}
                         </q-td>
                         <q-td key="status" :props="props">
                           {{ props.row.status }}
@@ -378,6 +390,16 @@ export default defineComponent({
           headerClasses: "bg-blue-6 text-white",
           headerStyle: "font-size: 1.2em",
           style: "width: 300px",
+        },
+        {
+          name: "enrolledBy",
+          label: "Enrolled By",
+          field: "enrolledBy",
+          align: "center",
+          sortable: true,
+          headerClasses: "bg-blue-6 text-white",
+          headerStyle: "font-size: 1.2em",
+          style: "width: 550px",
         },
         {
           name: "status",

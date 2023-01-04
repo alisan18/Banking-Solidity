@@ -488,11 +488,11 @@ export default defineComponent({
     async getAllTransfers() {
       try {
         const res = await bankContract.methods.getAllTransfers().call();
-        // const filteredItems = res.filter((item) => {
-        //   return item._address == parseInt(this.currentAccount);
-        // });
-        this.transferRows = res;
-        console.log(res);
+        const filteredItems = res.filter((item) => {
+          return item.from == parseInt(this.currentAccount);
+        });
+        this.transferRows = filteredItems;
+        console.log(this.transferRows);
       } catch (error) {
         console.log("ERROR", error);
       }

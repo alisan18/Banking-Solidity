@@ -275,6 +275,7 @@
       "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
       "name": "enrolledUsers",
       "outputs": [
+        { "internalType": "address", "name": "enrolledBy", "type": "address" },
         { "internalType": "address", "name": "_address", "type": "address" },
         { "internalType": "uint256", "name": "enrolledTime", "type": "uint256" }
       ],
@@ -399,6 +400,7 @@
       "outputs": [
         {
           "components": [
+            { "internalType": "address", "name": "from", "type": "address" },
             { "internalType": "address", "name": "to", "type": "address" },
             { "internalType": "uint256", "name": "amount", "type": "uint256" },
             {
@@ -421,6 +423,11 @@
       "outputs": [
         {
           "components": [
+            {
+              "internalType": "address",
+              "name": "enrolledBy",
+              "type": "address"
+            },
             {
               "internalType": "address",
               "name": "_address",
@@ -637,6 +644,7 @@
       "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
       "name": "transfers",
       "outputs": [
+        { "internalType": "address", "name": "from", "type": "address" },
         { "internalType": "address", "name": "to", "type": "address" },
         { "internalType": "uint256", "name": "amount", "type": "uint256" },
         {
